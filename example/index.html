@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<!-- (C) 2013-present  SheetJS http://sheetjs.com -->
+<!-- vim: set ts=2: -->
+<html><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+<title>SheetJS JS-XLSX In-Browser HTML Table Export Demo</title>
+<meta charset="utf-8">
+<style>
+.xport, .btn {
+	display: inline;
+	text-align:center;
+}
+a { text-decoration: none }
+#data-table, #data-table th, #data-table td { border: 1px solid black }
+</style>
+</head>
+<body>
+
+<script type="text/javascript" src="../dest/sheetjs.js"></script>
+
+<script>
+function doit(type, fn, dl) {
+	var elt = document.getElementById('data-table');
+	var wb = XLSX.utils.table_to_book(elt, {sheet:"Sheet JS"});
+	return dl ?
+		XLSX.write(wb, {bookType:type, bookSST:true, type: 'base64'}) :
+		XLSX.writeFile(wb, fn || ('SheetJSTableExport.' + (type || 'xlsx')));
+}
+</script>
+<pre><h3><a href="https://sheetjs.com/">SheetJS</a> JS-XLSX In-Browser HTML Table Export Demo</h3>
+<b>Compatibility notes:</b>
+- Editable table leverages the HTML5 contenteditable feature, supported in most browsers.
+- IE6-9 requires ActiveX or Flash to download files.
+- iOS Safari file download may not work. <a href="https://git.io/ios_save">This is a known issue</a>.
+- This build is comprehensive. <a href="https://sheetjs.com/demos/tablemini">The "mini" build only includes XLSX support</a>.
+
+<b>Editable Data Table:</b> (click a cell to edit it)
+</pre>
+<div id="container"><meta charset="utf-8"><title>SheetJS Table Export</title><table id="data-table"><tbody><tr><td t="s" id="sjs-A1"><span contenteditable="true">This</span></td><td t="s" id="sjs-B1"><span contenteditable="true">is</span></td><td t="s" id="sjs-C1"><span contenteditable="true">a</span></td><td t="s" id="sjs-D1"><span contenteditable="true">Test</span></td></tr><tr><td t="s" id="sjs-A2"><span contenteditable="true">வணக்கம்</span></td><td t="s" id="sjs-B2"><span contenteditable="true">สวัสดี</span></td><td t="s" id="sjs-C2"><span contenteditable="true">你好</span></td><td t="s" id="sjs-D2"><span contenteditable="true">가지마</span></td></tr><tr><td t="n" id="sjs-A3"><span contenteditable="true">1</span></td><td t="n" id="sjs-B3"><span contenteditable="true">2</span></td><td t="n" id="sjs-C3"><span contenteditable="true">3</span></td><td t="n" id="sjs-D3"><span contenteditable="true">4</span></td></tr><tr><td t="s" id="sjs-A4"><span contenteditable="true">Click</span></td><td t="s" id="sjs-B4"><span contenteditable="true">to</span></td><td t="s" id="sjs-C4"><span contenteditable="true">edit</span></td><td t="s" id="sjs-D4"><span contenteditable="true">cells</span></td></tr></tbody></table></div>
+<script type="text/javascript">
+/* initial table */
+var aoa = [
+	["This",   "is",     "a",    "Test"],
+	["வணக்கம்", "สวัสดี", "你好", "가지마"],
+	[1,        2,        3,      4],
+	["Click",  "to",     "edit", "cells"]
+];
+var ws = XLSX.utils.aoa_to_sheet(aoa);
+var html_string = XLSX.utils.sheet_to_html(ws, { id: "data-table", editable: true });
+document.getElementById("container").innerHTML = html_string;
+
+async function saveFromRemote(){
+	var obj = await (await fetch("/mahyapardaz/GozareshAvarez/data.php?source=fish&pagenum=0&pagesize=10")).json();
+	var workbook = XLSX.utils.book_new();
+	sheet={};
+	XLSX.utils.sheet_add_json(sheet,obj.Rows);
+	XLSX.utils.book_append_sheet(workbook, sheet, "سلام شیت")
+	XLSX.writeFile(workbook ,  ('سلام.xlsx'));
+}
+
+</script>
+<br>
+<pre><b>Export it!</b></pre>
+<table id="xport">
+<tbody><tr><td><pre>XLSX Excel 2007+ XML</pre></td><td>
+	<p id="xportxlsx" class="xport"><input type="submit" value="Export to XLSX!" onclick="doit('xlsx');"></p>
+	<p id="xlsxbtn" class="btn"></p>
+</td></tr>
+<tr><td><pre>XLSB Excel 2007+ Binary</pre></td><td>
+	<p id="xportxlsb" class="xport"><input type="submit" value="Export to XLSB!" onclick="doit('xlsb');"></p>
+	<p id="xlsbbtn" class="btn"></p>
+</td></tr>
+<tr><td><pre>XLS Excel 97-2004 Binary</pre></td><td>
+	<p id="xportbiff8" class="xport"><input type="submit" value="Export to XLS!" onclick="doit('biff8', 'SheetJSTableExport.xls');"></p>
+	<p id="biff8btn" class="btn"></p>
+</td></tr>
+<tr><td><pre>ODS</pre></td><td>
+	<p id="xportods" class="xport"><input type="submit" value="Export to ODS!" onclick="doit('ods');"></p>
+	<p id="odsbtn" class="btn"></p>
+</td></tr>
+<tr><td><pre>Flat ODS</pre></td><td>
+	<p id="xportfods" class="xport"><input type="submit" value="Export to FODS!" onclick="doit('fods', 'SheetJSTableExport.fods');"></p>
+	<p id="fodsbtn" class="btn"></p>
+</td></tr>
+<tr><td><pre>Remote JSON</pre></td><td>
+	<p id="xportfods" class="xport"><input type="submit" value="Export to XLSX!" onclick="saveFromRemote()"></p>
+	<p id="fodsbtn" class="btn"></p>
+</td></tr>
+</tbody></table>
+<pre><b>Powered by the <a href="https://sheetjs.com/opensource">community version of js-xlsx</a></b></pre>
+
+
+
+</body></html>

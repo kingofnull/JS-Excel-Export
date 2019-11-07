@@ -1,0 +1,1 @@
+uglifyjs src\shim.js src\xlsx.js src\Blob.js src\FileSaver.js -o dest\sheetjs.js
